@@ -106,18 +106,26 @@
 	}
 
 	# 投稿データ作成
-	if (($playing_data[3] != $now_playing[3]) && isset($now_playing[3])) {
+	if ($now_playing[4] == 1) {
 
-		$post_arr = array();
-		$post_arr[] = "#なうぷれ♪ (";
-		$post_arr[] = $now_playing[5];
-		$post_arr[] = "回再生)\n";
-		$post_arr[] = $now_playing[1];
-		$post_arr[] = " / ";
-		$post_arr[] = $now_playing[0];
-		$post_arr[] = "\n#nowplaying";
+		if (($playing_data[3] != $now_playing[3]) && isset($now_playing[3])) {
 
-		$post_data = implode($post_arr);
+			$post_arr = array();
+			$post_arr[] = "#なうぷれ♪ (";
+			$post_arr[] = $now_playing[5];
+			$post_arr[] = "回再生)\n";
+			$post_arr[] = $now_playing[1];
+			$post_arr[] = " / ";
+			$post_arr[] = $now_playing[0];
+			$post_arr[] = "\n#nowplaying";
+
+			$post_data = implode($post_arr);
+
+		} else {
+
+			$post_data == "";
+
+		}
 
 	} else {
 
@@ -184,7 +192,7 @@
 			if (!empty($post_data)) {
 
 				$data2 = [
-					'tweet' => $post_data
+					'note' => $post_data
 				];
 
 				$json_data2 = json_encode($data2);
@@ -213,7 +221,7 @@
 			if (!empty($post_data)) {
 
 				$data3 = [
-					'tweet' => $post_data
+					'note' => $post_data
 				];
 
 				$json_data3 = json_encode($data3);
