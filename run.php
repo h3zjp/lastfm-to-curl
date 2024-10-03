@@ -1,5 +1,8 @@
 <?php
 
+	# エラー表示
+	ini_set( 'display_errors', 1 );
+
 	# フォルダパス
 	$folder = 'ここにフルパス(/で終わる)を記述';
 
@@ -9,10 +12,11 @@
 
 	# 投稿の有無 (投稿: true)
 	$posting = true;
-	$posting_twtr  = false;
-	$posting_msky  = true;
-	$posting_nostr = false;
-	$posting_bsky  = false;
+	$posting_twtr    = false;
+	$posting_msky    = false;
+	$posting_nostr   = false;
+	$posting_bsky    = false;
+	$posting_concrnt = false;
 
 	# 旧Twitter API Key
 	$twtr_apikey      = 'API Key (Consumer Key)';
@@ -121,6 +125,11 @@
 
 			$post_data = implode($post_arr);
 
+			$post_arr[] = "\n";
+			$post_arr[] = $now_playing[2];
+
+			$post_data2 = implode($post_arr);
+
 		} else {
 
 			$post_data == "";
@@ -141,14 +150,9 @@
 
 			if (!empty($post_data)) {
 
-				$data = [
-					'text' => $post_data
-				];
-
 				$twtr_connection = new TwitterOAuth($twtr_apikey, $twtr_apisecret, $twtr_accesstoken, $twtr_tokensecret);
-
-				$twtr_connection->setApiVersion("2");
-				$twtr_result = $twtr_connection->post('tweets', $data, true);
+				$twtr_connection->setApiVersion('2');
+				$twtr_result = $twtr_connection->post('tweets', ['text' => $post_data], ['jsonPayload' => true]);
 
 			}
 
@@ -189,24 +193,24 @@
 		# https://github.com/mattn/algia を使う前提のサンプル
 		if ($posting_nostr == true) {
 
-			if (!empty($post_data)) {
+			if (!empty($post_data2)) {
 
-				$data2 = [
-					'note' => $post_data
+				$data = [
+					'note' => $post_data2
 				];
 
-				$json_data2 = json_encode($data2);
+				$json_data = json_encode($data);
 
-				$put_url2 = 'http://127.0.0.1:10000/post';
+				$put_url = 'http://127.0.0.1:10000/post';
 
-				$ch = curl_init($put_url2);
+				$ch = curl_init($put_url);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 				curl_setopt($ch, CURLOPT_VERBOSE, true);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data2);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
 				curl_exec($ch);
 				curl_close($ch);
 
@@ -220,22 +224,51 @@
 
 			if (!empty($post_data)) {
 
-				$data3 = [
+				$data = [
 					'note' => $post_data
 				];
 
-				$json_data3 = json_encode($data3);
+				$json_data = json_encode($data);
 
-				$put_url3 = 'http://127.0.0.1:10010/post';
+				$put_url = 'http://127.0.0.1:10010/post';
 
-				$ch = curl_init($put_url3);
+				$ch = curl_init($put_url);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 				curl_setopt($ch, CURLOPT_VERBOSE, true);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data3);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+				curl_exec($ch);
+				curl_close($ch);
+
+			}
+
+		}
+
+		# Concurrent
+		# https://github.com/rassi0429/concurrent-webhook を使う前提のサンプル
+		if ($posting_concrnt == true) {
+
+			if (!empty($post_data)) {
+
+				$data = [
+					'text' => $post_data
+				];
+
+				$json_data = json_encode($data);
+
+				$put_url = 'http://127.0.0.1:10020/post';
+
+				$ch = curl_init($put_url);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch, CURLOPT_VERBOSE, true);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_POST, true);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
 				curl_exec($ch);
 				curl_close($ch);
 
