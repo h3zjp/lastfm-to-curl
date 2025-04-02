@@ -65,7 +65,7 @@
 	# URL
 	$now_playing[3] = $result['recenttracks']['track'][0]['url'];
 	# NowPlaying かどうか
-	if ($result['recenttracks']['track'][0]['@attr']['nowplaying'] == true) {
+	if (isset($result['recenttracks']['track'][0]['@attr']['nowplaying'])) {
 
 		$now_playing[4] = 1;
 
@@ -132,13 +132,13 @@
 
 		} else {
 
-			$post_data == "";
+			$post_data = "";
 
 		}
 
 	} else {
 
-		$post_data == "";
+		$post_data = "";
 
 	}
 
