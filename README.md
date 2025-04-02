@@ -1,5 +1,6 @@
 # Last.fm to cURL
-Last.fm から cURL 投げて各種SNSへ自動投稿するための PHP スクリプト
+Last.fm から cURL 投げて各種SNSへ自動投稿するための PHP スクリプト<br>
+Last.fm 対応プレーヤーで音楽を流すだけで、いわゆる "なうぷれ" を各種SNSへ完全自動で投稿することができる
 
 # 使い方
 1. https://www.last.fm/api/account/create より、API Key を入手します。
